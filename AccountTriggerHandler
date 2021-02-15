@@ -1,0 +1,60 @@
+public class AccountTriggerHandler {
+    
+    public List<Account> newList;
+    public List<Account> oldList;
+    public Map<Id,Account> newMap;
+    public Map<Id,Account> oldMap;
+    
+    public AccountTriggerHandler ()
+    {
+        newList = new List<Account>();
+        oldList = new List<Account>();
+        newMap = new Map<Id,Account>();
+        oldMap = new Map<Id,Account>();
+    }
+    
+    public void beforeInsert()
+    {
+        validate(newList);                                          
+    }
+    
+    public void beforeUpdate()
+    {
+        validate(newList);
+    }
+    
+    public void afterInsert() {}
+    
+    public void afterUpdate() {}  
+    
+    //Métodos com lógica
+    
+    private void validate(List<account> aList){
+        List<Contact> contac = new List<Contact>();
+        List<Opportunity> op = new List<Opportunity>();
+        
+        for(Account ac : aList){
+            if(ac.AnnualRevenue>100000){
+                Contact ct = new Contact(FirstName='Teste ',
+                                         LastName = ac.Name,
+                                         AccountId = ac.Id);
+                                         
+                Opportunity opt = new Opportunity(Name='NewOpportunity ' + ac.Name, 
+                                                 CloseDate = System.today().addMonths(1), 
+                                                 AccountId = ac.Id, 
+                                                 StageName = 'Other',
+                                                 ContactId = ct.Id);
+                contac.add(ct);
+                op.add(opt);
+                
+            }
+            if (contac.size() > 0){
+                insert contac;
+            } 
+            if (op.size() > 0){
+                insert op;
+                
+            }
+        }
+    } 
+}

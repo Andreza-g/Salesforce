@@ -1,0 +1,11 @@
+@IsTest
+public class AccountTriggerHandlerTest {
+    
+     @IsTest
+     static void validateTest1(){                                                                          
+         Test.startTest();//inicia os limites              
+         Account ac = new Account(Name = 'teste', AnnualRevenue = 125000);
+         insert ac;
+         Test.stopTest(); //zera os limites
+      }
+}

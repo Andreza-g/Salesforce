@@ -1,0 +1,12 @@
+trigger WordTrigger on Word__c (before update, before insert, after insert, after update) {
+    
+    WordTriggerHandler handler = new  WordTriggerHandler();
+    handler.newRecordList = trigger.new;
+    //handler.oldRecordList = trigger.old;
+    //handler.newRecordMap = trigger.newMap;
+    //handler.oldRecordMap = trigger.oldMap;
+    
+    if(trigger.isAfter && trigger.isInsert){
+        handler.onAfterInsert();
+    }
+}

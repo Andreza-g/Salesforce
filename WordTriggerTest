@@ -1,0 +1,30 @@
+@isTest
+public class WordTriggerTest {
+    
+    @testSetup
+    static void setup(){
+        List<Account> l_account = new List<Account>();
+        // for(valorInicial; Enquanto; Faça)
+        for(Integer i = 0; i < 10; i++) {
+            Account acc = new Account(Name = 'Test ' + i);
+            l_account.add(acc);
+        }
+        insert l_account;
+    }
+	
+    @IsTest
+    static void test1(){
+        Word__c word = new Word__c(
+        	Old_Word__c = 'Test',
+            New_Word__c = 'NewTest'
+        );
+        Test.startTest();
+        insert word;
+        Test.stopTest();
+        
+        List<Account> l_account = [SELECT Id, Name FROM Account];
+        for(Account acc : l_account){
+            System.assert(acc.Name.contains('NewTest'));
+        }
+    }
+}

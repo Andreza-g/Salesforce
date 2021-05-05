@@ -1,0 +1,39 @@
+public class  WordTriggerHandler {
+        
+     //## Atributes
+    public 	Map<Id,Word__c> 	newRecordMap;
+    public 	Map<Id,Word__c> 	oldRecordMap;
+    public 	List<Word__c> 		newRecordList;
+    public 	List<Word__c> 		oldRecordList;
+    
+    //## Constructor
+    public  WordTriggerHandler()
+    {
+        this.newRecordList 	= new List<Word__c>();
+        //this.oldRecordList 	= new List<Word__c>();
+        //this.newRecordMap 	= new Map<Id,Word__c>();
+        //this.oldRecordMap 	= new Map<Id,Word__c>();
+    }
+        
+    //public void onBeforeInsert() {}
+    //public void onBeforeUpdate() {}
+    public void onAfterInsert() {
+        String oldWord = this.newRecordList[0].Old_Word__c;
+        String newWord = this.newRecordList[0].New_Word__c;
+        changeAccountNames(oldWord, newWord);
+    }
+    //public void onAfterUpdate() {}
+    //-----------------------------------
+   
+    public void changeAccountNames(String oldWord, String newWord){
+        if((String.isBlank(oldWord) && String.isBlank(newWord)) || oldWord == newWord)
+            return;
+        
+        List<Account> l_account = [SELECT Id, Name FROM Account
+                                  WHERE Name LIKE : '%' + oldWord + '%'];
+        for(Account acc : l_account){
+            acc.Name = acc.Name.replaceAll(oldWord, newWord);
+        }
+        update l_account;
+    }
+}
